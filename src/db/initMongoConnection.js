@@ -1,5 +1,5 @@
 import mongoose from 'mongoose';
-import { getEnvVar } from '../utils/getEvnVar';
+import { getEnvVar } from '../utils/getEvnVar.js';
 
 export const initMongoDB = async () => {
   try {
