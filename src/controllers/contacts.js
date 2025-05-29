@@ -1,14 +1,14 @@
+import createHttpError from 'http-errors';
+import { parseSortParams } from '../utils/parseSortParams.js';
+import { parseFilterParams } from '../utils/parseFilterParams.js';
+import { parsePaginationParams } from '../utils/parsePaginationParams.js';
 import {
-  createContact,
-  getAllContacts,
+createContact,
+getAllContacts,
   getContactById,
   deleteContact,
   updateContact,
 } from '../services/contacts.js';
-import createHttpError from 'http-errors';
-import { parsePaginationParams } from '../utils/parsePaginationParams.js';
-import { parseSortParams } from '../utils/parseSortParams.js';
-import { parseFilterParams } from '../utils/parseFilterParams.js';
 
 export const getContactsController = async (req, res, next) => {
   try {
