@@ -1,9 +1,10 @@
-import express from 'express';
 import cors from 'cors';
-import pinoHttp from 'pino-http';
 import dotenv from 'dotenv';
+import router from './routers/index.js';
+import express from 'express';
+import pinoHttp from 'pino-http';
+import cookieParser from 'cookie-parser';
 import { getEnvVar } from './utils/getEvnVar.js';
-import contactRouter from './routers/contacts.js';
 import { errorHandler } from './middlewares/errorHandler.js';
 import { notFoundHandler } from './middlewares/notFoundHandler.js';
 
@@ -16,7 +17,7 @@ export const setupServer = () => {
 
   app.use(express.json());
   app.use(cors());
-
+  app.use(cookieParser());
   app.use(pinoHttp());
 
   app.get('/', (req, res) => {
@@ -25,7 +26,7 @@ export const setupServer = () => {
     });
   });
 
-  app.use(contactRouter);
+  app.use(router);
 
   app.use('*', notFoundHandler);
 
