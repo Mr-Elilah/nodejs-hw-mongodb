@@ -1,8 +1,8 @@
-import { json } from 'express';
 import { ONE_DAY } from '../constants/index.js';
 import { loginUser } from '../services/auth.js';
 import { logoutUser } from '../services/auth.js';
 import { registerUser } from '../services/auth.js';
+import { SessionsCollection } from '../db/models/session.js';
 import { refreshUsersSession } from '../services/auth.js';
 
 export const registerUserController = async (req, res) => {
@@ -38,8 +38,12 @@ export const loginUserController = async (req, res) => {
 };
 
 export const logoutUserController = async (req, res) => {
-  if (req.cookies.sessionId) {
-    await logoutUser(req.cookies.sessionId);
+  const sessionId = req.cookies.sessionId;
+
+  if (sessionId) {
+    await logoutUser(sessionId);
+  } else {
+    await SessionsCollection.deleteMany({ user: req.user._id });
   }
 
   res.clearCookie('sessionId');
@@ -67,12 +71,11 @@ export const refreshUserSessionController = async (req, res) => {
 
   setupSession(res, session);
 
-  res,
-    json({
-      status: 200,
-      message: 'Successfully refreshed a session!',
-      data: {
-        accessToken: session.accessToken,
-      },
-    });
+  res.json({
+    status: 200,
+    message: 'Successfully refreshed a session!',
+    data: {
+      accessToken: session.accessToken,
+    },
+  });
 };
