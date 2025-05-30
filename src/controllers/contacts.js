@@ -3,8 +3,8 @@ import { parseSortParams } from '../utils/parseSortParams.js';
 import { parseFilterParams } from '../utils/parseFilterParams.js';
 import { parsePaginationParams } from '../utils/parsePaginationParams.js';
 import {
-createContact,
-getAllContacts,
+  createContact,
+  getAllContacts,
   getContactById,
   deleteContact,
   updateContact,
@@ -24,6 +24,7 @@ export const getContactsController = async (req, res, next) => {
       sortBy,
       sortOrder,
       filter,
+      userId: req.user._id,
     });
 
     res.json({
@@ -52,7 +53,7 @@ export const getContactByIdController = async (req, res) => {
 };
 
 export const createContactController = async (req, res) => {
-  const contact = await createContact(req.body);
+  const contact = await createContact(req.body, req.user._id);
 
   res.status(200).json({
     status: 201,
@@ -89,7 +90,7 @@ export const upsertContactController = async (req, res, next) => {
   const status = result.isNew ? 201 : 200;
   res.status(status).json({
     status,
-    message: `Successfully upserted s contact!`,
+    message: `Successfully upserted a contact!`,
     data: result.contact,
   });
 };
@@ -105,7 +106,7 @@ export const patchContactController = async (req, res, next) => {
 
   res.json({
     status: 200,
-    message: `Successfully patched s contact!`,
+    message: `Successfully patched a contact!`,
     data: result.contact,
   });
 };

@@ -24,11 +24,11 @@ router.post(
   ctrlWrapper(loginUserController),
 );
 
-router.post('/logout', ctrlWrapper(logoutUserController));
+router.use(authenticate);
+
+router.post('/logout', authenticate, ctrlWrapper(logoutUserController));
 
 router.post('/refresh', ctrlWrapper(refreshUserSessionController));
-
-router.use(authenticate);
 
 router.get('/', ctrlWrapper(getContactsController));
 
