@@ -4,7 +4,7 @@ import router from './routers/index.js';
 import express from 'express';
 import pino from 'pino-http';
 import cookieParser from 'cookie-parser';
-import { getEnvVar } from './utils/getEnvVar.js';
+import { getEnvVar } from './utils/getEnvVar';
 import { errorHandler } from './middlewares/errorHandler.js';
 import { notFoundHandler } from './middlewares/notFoundHandler.js';
 
