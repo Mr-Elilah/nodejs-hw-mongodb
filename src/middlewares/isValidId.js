@@ -3,8 +3,9 @@ import { isValidObjectId } from 'mongoose';
 
 export const isValidId = (req, res, next) => {
   const { contactId } = req.params;
+
   if (!isValidObjectId(contactId)) {
-    next(createHttpError(400, 'Invalid ID fofmat'));
+    return next(createHttpError(400, 'Invalid ID format'));
   }
   next();
 };
