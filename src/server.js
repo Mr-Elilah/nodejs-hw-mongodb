@@ -43,16 +43,3 @@ export const setupServer = () => {
     console.log(`Server is running on port ${PORT}`);
   });
 };
-
-{
-  "status": 401,
-    "message": "UnauthorizedError",
-    "data": {
-    "message": "Session not found"
-      }
-}
-
-{
-  "message": "Something went wrong",
-    "error": "Cannot read properties of undefined (reading 'page')"
-}
