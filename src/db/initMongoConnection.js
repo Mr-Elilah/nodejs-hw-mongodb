@@ -1,5 +1,5 @@
 import mongoose from 'mongoose';
-import { getEnvVar } from '../utils/getEvnVar.js';
+import { getEnvVar } from '../utils/getEnvVar.js';
 
 export const initMongoDB = async () => {
   try {
@@ -8,7 +8,9 @@ export const initMongoDB = async () => {
     const url = getEnvVar('MONGODB_URL');
     const db = getEnvVar('MONGODB_DB');
 
-    await mongoose.connect(`mongodb+srv://${user}:${pwd}@${url}/${db}?retryWrites=true&w=majority`);
+    await mongoose.connect(
+      `mongodb+srv://${user}:${pwd}@${url}/${db}?retryWrites=true&w=majority`,
+    );
     console.log('Mongo connection successfully established!');
   } catch (e) {
     console.log('Error while setting up mongo connection', e);
