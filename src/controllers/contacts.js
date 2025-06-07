@@ -1,6 +1,11 @@
+import mongoose from 'mongoose';
 import createHttpError from 'http-errors';
+
+import { getEnvVar } from '../utils/getEnvVar.js';
 import { parseSortParams } from '../utils/parseSortParams.js';
 import { parseFilterParams } from '../utils/parseFilterParams.js';
+import { saveFileToUploadDir } from '../utils/saveFileToUploadDir.js';
+import { saveFileToCloudinary } from '../utils/saveFileToCloudinary.js';
 import { parsePaginationParams } from '../utils/parsePaginationParams.js';
 import {
   createContact,
@@ -9,7 +14,6 @@ import {
   deleteContact,
   updateContact,
 } from '../services/contacts.js';
-import mongoose from 'mongoose';
 
 export const getContactsController = async (req, res, next) => {
   try {
@@ -136,21 +140,36 @@ export const patchContactController = async (req, res, next) => {
   try {
     const { contactId } = req.params;
     const userId = req.user._id;
+    const photo = req.file;
 
     if (!mongoose.Types.ObjectId.isValid(contactId)) {
       throw createHttpError(400, 'Invalid contact ID');
     }
 
-    const updatedContact = await updateContact(contactId, req.body, userId);
+    let photoUrl;
 
-    if (!updatedContact) {
+    if (photo) {
+      if (getEnvVar('ENABLE_CLOUDINARY') === 'true') {
+        photoUrl = await saveFileToCloudinary(photo);
+      } else {
+        photoUrl = await saveFileToUploadDir(photo);
+      }
+    }
+
+    const result = await updateContact(
+      contactId,
+      { ...req.body, photo: photoUrl },
+      userId,
+    );
+
+    if (!result) {
       throw createHttpError(404, 'Contact not found');
     }
 
     res.status(200).json({
       status: 200,
       message: 'Successfully patched a contact!',
-      data: updatedContact.contact,
+      data: result.contact,
     });
   } catch (err) {
     next(err);

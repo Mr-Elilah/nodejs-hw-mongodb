@@ -1,8 +1,12 @@
 import { THIRTY_DAYS } from '../constants/index.js';
-import { loginUser } from '../services/auth.js';
-import { logoutUser } from '../services/auth.js';
-import { registerUser } from '../services/auth.js';
-import { refreshUsersSession } from '../services/auth.js';
+import {
+  loginUser,
+  logoutUser,
+  registerUser,
+  resetPassword,
+  requestResetToken,
+  refreshUsersSession,
+} from '../services/auth.js';
 
 export const registerUserController = async (req, res) => {
   const user = await registerUser(req.body);
@@ -59,10 +63,16 @@ const setupSession = (res, session) => {
 };
 
 export const refreshUserSessionController = async (req, res) => {
-  const session = await refreshUsersSession({
-    sessionId: req.cookies.sessionId,
-    refreshToken: req.cookies.refreshToken,
-  });
+  const { sessionId, refreshToken } = req.cookies;
+
+  if (!sessionId || !refreshToken) {
+    return res.status(401).json({
+      status: 401,
+      message: 'Session is missing. Please login again.',
+    });
+  }
+
+  const session = await refreshUsersSession({ sessionId, refreshToken });
 
   setupSession(res, session);
 
@@ -72,5 +82,23 @@ export const refreshUserSessionController = async (req, res) => {
     data: {
       accessToken: session.accessToken,
     },
+  });
+};
+
+export const requestResetEmailController = async (req, res) => {
+  await requestResetToken(req.body.email);
+  res.json({
+    message: 'Reset password email was successfully sent',
+    status: 200,
+    data: {},
+  });
+};
+
+export const resetPasswordController = async (req, res) => {
+  await resetPassword(req.body);
+  res.json({
+    message: 'Password was successfully reset',
+    status: 200,
+    data: {},
   });
 };
