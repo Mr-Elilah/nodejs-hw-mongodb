@@ -6,28 +6,30 @@ info:
     name: Apache 2.0
     url: http://www.apache.org/licenses/LICENSE-2.0.html
   description: This is a documentation of Contacts app
+
 tags:
   - name: Contacts
     description: Operations about contacts.
+
 servers:
   - url: https://nodejs-hw-mongodb-yi7w.onrender.com
     description: Production server
-  - url: http://localhost:3000/api
-    description: Local development server
 
 paths:
   /contacts:
     get:
-      $ref: ../swagger/paths/contacts/get.yaml
+      $ref: ../swagger/paths/contacts/getAll.yaml
     post:
       $ref: ../swagger/paths/contacts/post.yaml
-      /contacts/{contactId}:
+
+  /contacts/{contactId}:
     get:
-      $ref: '../swagger/paths/contacts/{id}/get.yaml'
+      $ref: ../swagger/paths/contacts/{id}/get.yaml
     patch:
-      $ref: '../swagger/paths/contacts/{id}/patch.yaml'
+      $ref: ../swagger/paths/contacts/{id}/patch.yaml
     delete:
-      $ref: '../swagger/paths/contacts/{id}/delete.yaml'
+      $ref: ../swagger/paths/contacts/{id}/delete.yaml
+
 components:
   securitySchemes:
     bearerAuth:
